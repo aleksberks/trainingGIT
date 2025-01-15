@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1 {
+            color: #d9534f;
+            text-align: center;
+        }
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .method-get { color: #5bc0de; font-weight: bold; }
+        .method-post { color: #5cb85c; font-weight: bold; }
+        .method-put { color: #f0ad4e; font-weight: bold; }
+        .method-delete { color: #d9534f; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>API Documentation</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Endpoint</th>
+                <th>Method</th>
+                <th>Description</th>
+                <th>Parameters</th>
+                <th>Response</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Activity Endpoints -->
+            <tr>
+                <td>/activity/</td>
+                <td class="method-get">GET</td>
+                <td>Hämtar alla aktiviteter (och återställer ev förändringar)</td>
+                <td>None</td>
+                <td>
+                    <strong>Status: 200</strong><br>
+                    - activities [<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- id (int)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- activity (text)<br>
+                    ]<br>
+                    <strong>Status: 400</strong><br>
+                    - error [[text]]
+                </td>
+            </tr>
+            <tr>
+                <td>/activity/</td>
+                <td class="method-post">POST</td>
+                <td>Sparar en ny aktivitet. Nya postens id fås i retur vid lyckad spara</td>
+                <td>
+                    - activity (text)<br>
+                    - action=save
+                </td>
+                <td>
+                    <strong>Status: 200</strong><br>
+                    - id (int)<br>
+                    - message [[text]]<br>
+                    <strong>Status: 400</strong><br>
+                    - error [[text]]
+                </td>
+            </tr>
+            <tr>
+                <td>/activity/{id}</td>
+                <td class="method-get">GET</td>
+                <td>Hämtar en enskild aktivitet</td>
+                <td>- id (int)</td>
+                <td>
+                    <strong>Status: 200</strong><br>
+                    - id (int)<br>
+                    - activity (text)<br>
+                    <strong>Status: 400</strong><br>
+                    - error [[text]]
+                </td>
+            </tr>
+            <tr>
+                <td>/activity/{id}</td>
+                <td class="method-put">PUT</td>
+                <td>Uppdaterar en befintlig aktivitet</td>
+                <td>
+                    - id (int)<br>
+                    - activity (text)<br>
+                    - action=save
+                </td>
+                <td>
+                    <strong>Status: 200</strong><br>
+                    - result (boolean)<br>
+                    - message [[text]]<br>
+                    <strong>Status: 400</strong><br>
+                    - error [[text]]
+                </td>
+            </tr>
+            <tr>
+                <td>/activity/{id}</td>
+                <td class="method-delete">DELETE</td>
+                <td>Raderar en befintlig aktivitet</td>
+                <td>
+                    - id (int)<br>
+                    - action=delete
+                </td>
+                <td>
+                    <strong>Status: 200</strong><br>
+                    - result (boolean)<br>
+                    - message [[text]]<br>
+                    <strong>Status: 400</strong><br>
+                    - error [[text]]
+                </td>
+            </tr>
+
+            <!-- Workout Endpoints -->
+            <tr>
+                <td>/workout/</td>
+                <td class="method-get">GET</td>
+                <td>Hämtar alla workouts</td>
+                <td>None</td>
+                <td>
+                    <strong>Status: 200</strong><br>
+                    - workouts [<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- id (int)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- activityId (int)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- date (yyyy-mm-dd)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- time (time)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- distance (decimal)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- description (text)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- rpe (int)<br>
+                    ]
+                </td>
+            </tr>
+            <tr>
+                <td>/workout/</td>
+                <td class="method-post">POST</td>
+                <td>Sparar en ny workout</td>
+                <td>
+                    - activityId (int)<br>
+                    - date (yyyy-mm-dd)<br>
+                    - time (time)<br>
+                    - distance (decimal)<br>
+                    - description (text)<br>
+                    - rpe (int)
+                </td>
+                <td>
+                    <strong>Status: 200</strong><br>
+                    - id (int)<br>
+                    - message [[text]]<br>
+                    <strong>Status: 400</strong><br>
+                    - error [[text]]
+                </td>
+            </tr>
+            <tr>
+                <td>/workout/{id}</td>
+                <td class="method-get">GET</td>
+                <td>Hämtar en workout</td>
+                <td>- id (int)</td>
+                <td>
+                    <strong>Status: 200</strong><br>
+                    - id (int)<br>
+                    - activityId (int)<br>
+                    - date (yyyy-mm-dd)<br>
+                    - time (time)<br>
+                    - distance (decimal)<br>
+                    - description (text)<br>
+                    - rpe (int)
+                </td>
+            </tr>
+            <tr>
+                <td>/workout/{id}</td>
+                <td class="method-put">PUT</td>
+                <td>Uppdaterar en workout</td>
+                <td>
+                    - id (int)<br>
+                    - date (yyyy-mm-dd)<br>
+                    - time (time)<br>
+                    - distance (decimal)<br>
+                    - description (text)<br>
+                    - rpe (int)
+                </td>
+                <td>
+                    <strong>Status: 200</strong><br>
+                    - result (boolean)<br>
+                    - message [[text]]<br>
+                    <strong>Status: 400</strong><br>
+                    - error [[text]]
+                </td>
+            </tr>
+            <tr>
+                <td>/workout/{id}</td>
+                <td class="method-delete">DELETE</td>
+                <td>Raderar en workout</td>
+                <td>- id (int)</td>
+                <td>
+                    <strong>Status: 200</strong><br>
+                    - result (boolean)<br>
+                    - message [[text]]<br>
+                    <strong>Status: 400</strong><br>
+                    - error [[text]]
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>
