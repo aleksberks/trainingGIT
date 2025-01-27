@@ -4,6 +4,7 @@ from .models import Activity, Workout
 from .serializers import ActivitySerializer, WorkoutSerializer
 from rest_framework.permissions import IsAuthenticated
 
+
 from django.contrib.auth import login
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -11,6 +12,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 import random
+from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 
 class ActivityViewSet(viewsets.ModelViewSet):
     serializer_class = ActivitySerializer
@@ -59,10 +62,35 @@ class VerifyLoginCodeView(APIView):
                 user.profile.save()
                 login(request, user)
                 refresh = RefreshToken.for_user(user)
-                return Response({
-                    'refresh': str(refresh),
+                response = Response({
                     'access': str(refresh.access_token),
                 }, status=status.HTTP_200_OK)
+                response.set_cookie(
+                    key = 'refresh_token',
+                    value = str(refresh),
+                    httponly = True,
+                    secure = True,
+                    path = 'refresh/',
+                    samesite = 'Strict'
+                )
+                return response
             return Response({'error': 'Invalid code'}, status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+class CustomRefreshView(TokenRefreshView):
+    def get(self, request, *args,  **kwargs):
+        refresh_token = request.COOKIES.get('refresh_token')
+
+        if refresh_token is None:
+            return Response({'error': 'Refresh token not provided'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        serializer = self.get_serializer(data={'refresh':refresh_token})
+
+        try:
+            serializer.is_valid(raise_exception=True)
+        except TokenError as e:
+            raise InvalidToken(e.args[0])
+        
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
+    

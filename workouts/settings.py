@@ -25,7 +25,9 @@ SECRET_KEY = 'django-insecure-f0f#2=$329!g)y@yahl)e%=s_8(@t(ap6cl0$s_z%%o1-++iyr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+
+
 
 
 # Application definition
@@ -33,6 +35,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'rest_framework',
     'endpoints',
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,6 +47,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -89,17 +93,12 @@ REST_FRAMEWORK = {
     ),
 }
 
-EMAIL_BACKEND = 'django_mailjet.backends.MailjetBackend'
-EMAIL_HOST = 'in-v3.mailjet.com'
-MAILJET_API_KEY = '5a7076fa77cd915c5a48bb3675930e47'
-MAILJET_API_SECRET = '499b9c6535e2336cb2f46590f7042e44'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
-EMAIL_TIMEOUT = 30
-DEFAULT_FROM_EMAIL = 'berkhald.aleks@gmail.com'
+CORS_ALLOW_HEADERS = "*"
 
-
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:5173',
+    'http://127.0.0.1.5173',
+]
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
